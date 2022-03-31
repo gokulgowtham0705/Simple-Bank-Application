@@ -14,25 +14,30 @@ class Bank{
 	private long Balance;
 	Scanner sc = new Scanner(System.in);
 	
-	
-	
-	
-	void create_account() throws ClassNotFoundException, SQLException 
+	//Method to Create Account
+	void create_account() throws ClassNotFoundException, SQLException            
 	{
-		 System.out.print("Enter Account No within 4 numbers: ");  
+		    //Getting Account Number from User Input
+		    System.out.print("Enter Account No within 4 numbers: ");  
 	        accno = sc.nextInt(); 
+	      
+	        //Getting Account Type from User Input
 	        System.out.print("Enter Account type: ");  
 	        acc_type = sc.next();  
+	      
+	        //Getting Account Name from User Input
 	        System.out.print("Enter Name: ");  
 	        acc_Holder_Name = sc.next();  
+	      
+	        //Getting Account Balance from User Input
 	        System.out.print("Enter Balance: ");  
 	        Balance = sc.nextLong(); 
 	        
-	      
-	 	   System.out.println("Connnecting to specified Database");
+	       //Creating connection to Database
 	 	   Class.forName("com.mysql.cj.jdbc.Driver");
 	 	   Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/bankacc","root","#Therigokul0705");
 	 	 
+	 	  //Passing the Insert query and inserting the details in Database
 	 	   PreparedStatement ps = con.prepareStatement("INSERT INTO details VALUES(?,?,?,?)");
 		   ps.setInt(1, accno);
 		   ps.setString(2, acc_type); 
@@ -44,16 +49,16 @@ class Bank{
 	      
 	}
 	
-	//method to show account details
+	//Method to Show account details
 	public void show_account() throws ClassNotFoundException, SQLException 
 	{  
+		//Creating connection to Database
 		Class.forName("com.mysql.cj.jdbc.Driver");
 		Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/bankacc","root","#Therigokul0705");
 	  
-		
+		//Passing the SELECT * query to get all account holders details
 		PreparedStatement ps = con.prepareStatement("SELECT * FROM details");
-		//ps.setInt(5, personal_number);
-		ResultSet rs = ps.executeQuery();
+        ResultSet rs = ps.executeQuery();
 		
 		while(rs.next()) 
 		{
@@ -69,53 +74,60 @@ class Bank{
 	
 	  
 	  
-	  void search_account() throws ClassNotFoundException, SQLException {
-		  int accno;
-		  int vaccno = 0;
-		  System.out.println("Enter the account number you want to search: ");
-		  accno=sc.nextInt();
-		  Class.forName("com.mysql.cj.jdbc.Driver");
-			Connection con1 = DriverManager.getConnection("jdbc:mysql://localhost:3306/bankacc","root","#Therigokul0705");
-			System.out.println("Connected Successfully");
-			PreparedStatement stmt=con1.prepareStatement("SELECT * FROM details WHERE account_no=?");
-			stmt.setInt(1, accno);
-			
-			ResultSet rs = stmt.executeQuery();
-			
-			while(rs.next()) 
-			{
-				vaccno=rs.getInt(1);
-			}
-			
-			if(vaccno==accno) 
-			{
-					System.out.println("The account number is: "+ rs.getString(1)+ ","+ "The name is: "+ rs.getString(3));
-					System.out.println("The account type is: "+ rs.getString(2)+"," + " The balance is: "+ rs.getString(4));
-				}
-				else 
-				{
-					System.out.println("The account Number is not correct Please Retry");
-				}
-	  }
-	  
-	  
+//	  void search_account() throws ClassNotFoundException, SQLException {
+//		  int accno;
+//		  int vaccno = 0;
+//		  System.out.println("Enter the account number you want to search: ");
+//		  accno=sc.nextInt();
+//		  Class.forName("com.mysql.cj.jdbc.Driver");
+//			Connection con1 = DriverManager.getConnection("jdbc:mysql://localhost:3306/bankacc","root","#Therigokul0705");
+//			System.out.println("Connected Successfully");
+//			PreparedStatement stmt=con1.prepareStatement("SELECT * FROM details WHERE account_no=?");
+//			stmt.setInt(1, accno);
+//			
+//			ResultSet rs = stmt.executeQuery();
+//			
+//			while(rs.next()) 
+//			{
+//				vaccno=rs.getInt(1);
+//			}
+//			
+//			if(vaccno==accno) 
+//			{
+//					System.out.println("The account number is: "+ rs.getString(1)+ ","+ "The name is: "+ rs.getString(3));
+//					System.out.println("The account type is: "+ rs.getString(2)+"," + " The balance is: "+ rs.getString(4));
+//				}
+//				else 
+//				{
+//					System.out.println("The account Number is not correct Please Retry");
+//				}
+//	  }
+//	  
+	  //Method to check balance
 	  void check_balance() throws ClassNotFoundException, SQLException {
 		  int accno; 
 		  int vaccno = 0;
+		  
+		  //Getting Account number from user
 		  System.out.println("Enter the account number you want to search: ");
 		  accno=sc.nextInt();
+		  
+		  //Creating connection to Database
 		  Class.forName("com.mysql.cj.jdbc.Driver");
-			Connection con1 = DriverManager.getConnection("jdbc:mysql://localhost:3306/bankacc","root","#Therigokul0705");
-			//System.out.println("Connected Successfully");
-			PreparedStatement stmt=con1.prepareStatement("SELECT balance FROM details WHERE account_no=?");
-			stmt.setInt(1, accno);
-             ResultSet rs = stmt.executeQuery();
-			
+		  Connection con1 = DriverManager.getConnection("jdbc:mysql://localhost:3306/bankacc","root","#Therigokul0705");
+		  
+		  //Passing the query to take the balance from specific account holder
+		  PreparedStatement stmt=con1.prepareStatement("SELECT balance FROM details WHERE account_no=?");
+		  stmt.setInt(1, accno);
+          ResultSet rs = stmt.executeQuery();
 			while(rs.next()) {
 				vaccno=rs.getInt(1);
 			}
 			System.out.println("The balance is: "+ vaccno);
 	  }
+	  
+	  
+	  //Method to Withdraw account
 	  public void withdraw() throws ClassNotFoundException, SQLException 
 	  {
 		  int user_input;
@@ -123,21 +135,24 @@ class Bank{
 		  int bal = 0,no = 0;
 		  long amt = 0;
 		  
-		  
+		  //Getting Account Number from user Input
 		  System.out.println("Enter the account number you want to withdraw: ");
 		  user_input=sc.nextInt();
+		  
+		  //Creating connection to Database
 		  Class.forName("com.mysql.cj.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/bankacc","root","#Therigokul0705");
-			//System.out.println("Connected to database Successfully");
-			PreparedStatement stmt=con.prepareStatement("SELECT * FROM details WHERE account_no=?");
-			stmt.setInt(1, user_input);
-			ResultSet rs = stmt.executeQuery();
+		  Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/bankacc","root","#Therigokul0705");
+		
+		  //Passing the query to get respective account details
+		   PreparedStatement stmt=con.prepareStatement("SELECT * FROM details WHERE account_no=?");
+		   stmt.setInt(1, user_input);
+		   ResultSet rs = stmt.executeQuery();
 			
      		while(rs.next()) 
 			{
 				verify=rs.getInt(1);
 			}
-			//System.out.println(verify);
+			
 				if(verify==user_input) 
 				{
 					PreparedStatement ps = con.prepareStatement("SELECT balance FROM details WHERE account_no=?");
@@ -152,8 +167,11 @@ class Bank{
 					}
 					
 					System.out.println(bal);
+					
 					System.out.println("Enter the amount you want to withdraw: "); 
 		            amt = sc.nextLong();
+		            
+		            //Getting Password which is same as Account Number
 			        System.out.println("Enter the Password: ");
 		            no = sc.nextInt();
 				}
@@ -164,14 +182,17 @@ class Bank{
 				}
 		         if (bal >= amt) 
 					{ 
+		        	     //Creating connection to Database
 			        	Class.forName("com.mysql.cj.jdbc.Driver");
 			 			Connection con1 = DriverManager.getConnection("jdbc:mysql://localhost:3306/bankacc","root","#Therigokul0705");
-			 			//System.out.println("Connected Successfully");
+			 			
+			 			
+			 			//Paasing the query to update the balance after  withdraw 
 			 			PreparedStatement stmt1=con1.prepareStatement("UPDATE details SET balance=balance-? WHERE account_no=?");
 			 			stmt1.setLong(1, amt);
 			 			stmt1.setInt(2, no);
 			 			int i=stmt1.executeUpdate();
-			 			//System.out.println(i+" record inserted ");
+			 			
 			 			con.close();
 			 			bal = (int) (bal - amt);  
 			            System.out.println("Balance after withdrawal: " + bal);  
@@ -183,15 +204,20 @@ class Bank{
 			        }  
 					
 				}
+	  
+	  //Method to Deposit the ammount
 	  public void deposit() throws SQLException, ClassNotFoundException {
 		  int verify = 0;
+		  
+		  //Getting the account number from user Input
 		  System.out.println("Enter the account number you want to deposit: ");
 		  int user_input = sc.nextInt();
 		  Class.forName("com.mysql.cj.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/bankacc","root","#Therigokul0705");
-			//System.out.println("Connected to database Successfully");
-			PreparedStatement stmt=con.prepareStatement("SELECT * FROM details WHERE account_no=?");
-			stmt.setInt(1, (int) user_input);
+		  Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/bankacc","root","#Therigokul0705");
+			
+		  //Passing the query to get respective account details
+		   PreparedStatement stmt=con.prepareStatement("SELECT * FROM details WHERE account_no=?");
+		   stmt.setInt(1, (int) user_input);
 			ResultSet rs = stmt.executeQuery();
 			
      	
@@ -199,7 +225,7 @@ class Bank{
 			{
 				verify=rs.getInt(1);
 			}
-			//System.out.println(verify);
+			
 				if(verify==user_input) 
 				{
 					PreparedStatement ps = con.prepareStatement("SELECT balance FROM details WHERE account_no=?");
@@ -270,16 +296,7 @@ public class BankingP {
 		// TODO Auto-generated method stub
 		
 		Bank b = new Bank();
-//		b.create_account();
- //     b.show_account();
-//		b.search_account();
-//		b.deposit();
-//		b.withdraw();
-//		b.check_balance();
-//	
-	
-		
-//		
+
 		Scanner sc = new Scanner(System.in);  
 
         int n = 0;  
@@ -288,7 +305,7 @@ public class BankingP {
         int ch;  
         do {  
             System.out.println("\n ***Banking System Application***");  
-            System.out.println("1.Create your Account \n  2. Display all account details  \n 3. Search Account \n 4.Withdraw \n 5.Deposit \n 6.Check Balance \n 7.Exit");  
+            System.out.println("1.Create your Account \n  2. Display all account details   \n 3.Withdraw \n 4.Deposit \n 5.Check Balance \n 6.Exit");  
             System.out.println("Enter your choice: ");  
             ch = sc.nextInt();  
                 switch (ch) {  
@@ -298,19 +315,19 @@ public class BankingP {
                        case 2:  
                         b.show_account();
                         break;  
-                       case 3:  
-                    	b.search_account();
-                       break;  
-                    case 4:  
+//                       case 3:  
+//                    	b.search_account();
+//                       break;  
+                    case 3:  
                         b.withdraw();
                         break;  
-                    case 5:  
+                    case 4:  
                         b.deposit();  
                         break;  
-                    case 6:
+                    case 5:
                     	b.check_balance();
                     	break;
-                    case 7:
+                    case 6:
                     	System.out.println("See you Soon..!");
                     	break;
                 }  
